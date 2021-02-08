@@ -26,6 +26,15 @@ jobs:
           name: Says World
           command: |
             echo $MESSAGE
+  print_circleci_info:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: echo "This is the pipeline ID << pipeline.id >>"                 
+      - run: echo "This is the pipeline number << pipeline.number >>"
+      - run: echo "This is the pipeline project git url << pipeline.project.git_url >>"
+      - run: echo "This is the git branch << pipeline.git.branch >>"
+      - run: echo "This is the previous git revision << pipeline.git.base_revision >>"
 workflows:
   # Name the workflow "welcome"
   welcome:
@@ -35,3 +44,4 @@ workflows:
       - print_hello
       - print_world:
           requires: [print_hello]
+      - print_circleci_info
