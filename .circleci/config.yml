@@ -45,5 +45,4 @@ workflows:
       - print_hello
       - print_world:
           requires: [print_hello]
-      - print_circleci_info:
-          context: default
+      - print_circleci_info
