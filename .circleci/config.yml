@@ -35,6 +35,7 @@ jobs:
       - run: echo "This is the pipeline project git url << pipeline.project.git_url >>"
       - run: echo "This is the git branch << pipeline.git.branch >>"
       - run: echo "This is the previous git revision << pipeline.git.base_revision >>"
+      - run: echo "Author: $AUTHOR"
 workflows:
   # Name the workflow "welcome"
   welcome:
