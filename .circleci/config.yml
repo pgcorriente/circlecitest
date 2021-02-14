@@ -5,31 +5,41 @@ orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
 # Orchestrate or schedule a set of jobs
+commands:
+  print_pipeline_id:
+    description: Prints the Id of the pipeline
+    steps:
+      - run: echo "This is the pipeline ID - $CIRCLE_WORKFLOW_ID"
 jobs:
-  save_hello_world_output:
+  print_pipeline_info:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run:
-          name: Saves hello world to a file
-          command: |
-            mkdir /tmp/circlecitmp
-            echo "Hello world" > /tmp/circlecitmp/output.txt
-            cat /tmp/circlecitmp/output.txt
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-            - circlecitmp/output.txt
-  print_output_file:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: Retrieves output.txt from workspace
-          command: |
-            cat /tmp/circlecitmp/output.txt
+      - run: print_pipeline_id
+#  save_hello_world_output:
+#    docker:
+#      - image: circleci/node:13.8.0
+#    steps:
+#      - run:
+#          name: Saves hello world to a file
+#          command: |
+#            mkdir /tmp/circlecitmp
+#            echo "Hello world" > /tmp/circlecitmp/output.txt
+#            cat /tmp/circlecitmp/output.txt
+#      - persist_to_workspace:
+#          root: /tmp
+#          paths:
+#            - circlecitmp/output.txt
+#  print_output_file:
+#    docker:
+#      - image: circleci/node:13.8.0
+#    steps:
+#      - attach_workspace:
+#          at: /tmp
+#      - run:
+#          name: Retrieves output.txt from workspace
+#          command: |
+#            cat /tmp/circlecitmp/output.txt
 #  print_hello:
 #    environment:
 #      MESSAGE: "Hello"
@@ -68,9 +78,10 @@ workflows:
     # Run the welcome/run job in its own container
     jobs:
       - welcome/run
-      - save_hello_world_output
-      - print_output_file:
-          requires: [save_hello_world_output]
+      - print_pipeline_info
+#      - save_hello_world_output
+#      - print_output_file:
+#          requires: [save_hello_world_output]
 #      - print_hello
 #      - print_world:
 #          requires: [print_hello]
