@@ -6,26 +6,51 @@ orbs:
   welcome: circleci/welcome-orb@0.4.1
 # Orchestrate or schedule a set of jobs
 jobs:
-  print_hello:
-    environment:
-      MESSAGE: "Hello"
+  save_hello_world_output:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - run:
-          name: Says Hello
+          name: Saves hello world to a file
           command: |
-            echo $MESSAGE
-  print_world:
-    environment:
-      MESSAGE: "World"
+            mkdir /tmp/circlecitmp
+            echo "Hello world" > /tmp/circlecitmp/output.txt
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - circlecitmp/output.txt
+  print_output_file:
     docker:
       - image: circleci/node:13.8.0
     steps:
+      - attach_workspace:
+          at: /tmp/circlecitmp
       - run:
-          name: Says World
+          name: Retrieves output.txt from workspace
           command: |
-            echo $MESSAGE
+            less /tmp/circlecitmp/output.txt
+#  print_hello:
+#    environment:
+#      MESSAGE: "Hello"
+#    docker:
+#      - image: circleci/node:13.8.0
+#    steps:
+#      - run:
+#          name: Says Hello
+#          command: |
+#            echo $MESSAGE
+#      persist_to_workspace:
+
+#  print_world:
+#    environment:
+#      MESSAGE: "World"
+#    docker:
+#      - image: circleci/node:13.8.0
+#    steps:
+#      - run:
+#          name: Says World
+#          command: |
+#            echo $MESSAGE
   print_circleci_info:
     docker:
       - image: circleci/node:13.8.0
