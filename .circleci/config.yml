@@ -9,8 +9,19 @@ commands:
   print_pipeline_id:
     description: Prints the Id of the pipeline
     steps:
-      - run: echo "This is the pipeline ID - $CIRCLE_WORKFLOW_ID"
+      - run: echo "This is the pipeline ID - ${CIRCLE_WORKFLOW_ID}"
 jobs:
+  error_handling_test:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run:
+          name: Returns 1 to simulate failed execution
+          command: return 1
+      - run:
+          name: Handles failed execution
+          command: echo "Execution has failed"
+          when: on_fail
   print_pipeline_info:
     docker:
       - image: circleci/node:13.8.0
@@ -79,6 +90,7 @@ workflows:
     jobs:
       - welcome/run
       - print_pipeline_info
+      - error_handling_test
 #      - save_hello_world_output
 #      - print_output_file:
 #          requires: [save_hello_world_output]
@@ -86,3 +98,4 @@ workflows:
 #      - print_world:
 #          requires: [print_hello]
 #      - print_circleci_info
+
